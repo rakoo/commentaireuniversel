@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <style type="text/css">
+    #base_url_container {width: 100%}
+    #base_url {width: 100%}
+    #past_comments {list-style: none;}
+    #past_comments li {padding:8px;}
+    li div {border:4px solid #f5f5ff;}
+  </style>
+  <body>
+    <div id="base_url_container">
+      base_url: <input id="base_url" type="text" onkeypress="changeUrl(event)">
+    </div>
+    </br>
+    comment: <input id="comment" type="text" onkeypress="postcomment(event)">
+
+    </br>
+    </br>
+    All Comments:
+    <ul id="past_comments">
+    </ul>
+  </body>
+
+  <script>
+    var baseUrlInput = document.getElementById('base_url')
+    var commentInput = document.getElementById('comment')
+    var allComments = document.getElementById('past_comments')
+
+
+    changeUrl = function(event) {
+      if (event.keyCode == 13) {
+        updateComments();
+      }
+    }
+
+    updateComments = function() {
+      var baseUrl = baseUrlInput.value;
+      var getCommentsXHR = new XMLHttpRequest();
+      getCommentsXHR.onreadystatechange = function() {
+        if (getCommentsXHR.readyState == 4) {
+          if (getCommentsXHR.status == 200) {
+            while (allComments.childElementCount > 0) {
+              allComments.removeChild(allComments.firstChild);
+            }
+
+            var parsed = JSON.parse(getCommentsXHR.responseText);
+            for (var rowIndex in parsed['rows']) {
+              appendCommentToCommentList(parsed['rows'][rowIndex]['value']);
+            }
+          }
+          else if (getCommentsXHR.status > 0) {
+            updateComments()
+          }
+        }
+      }
+
+      getCommentsXHR.open("GET",
+        "http://stalin.otokar.looc2011.eu:5984/commentaireuniversel/_design/commentaireuniversel/_view/by_site?"
+        + "reduce=false&"
+        + "descending=true&"
+        + "limit=10&"
+        + "key=\"" + encodeURIComponent(baseUrl) + "\"",
+        true
+      )
+      getCommentsXHR.setRequestHeader('Content-Type', 'application/json');
+      getCommentsXHR.send(null);
+    }
+
+    var postCommentXHR = new XMLHttpRequest();
+    postCommentXHR.onreadystatechange = function() {
+      if (postCommentXHR.readyState == 4) {
+        if (postCommentXHR.status == 201) {
+          updateComments();
+        }
+      }
+    }
+
+    appendCommentToCommentList = function(comment) {
+      var li = document.createElement('li')
+      var div = document.createElement('div')
+      div.appendChild(document.createTextNode(comment))
+      li.appendChild(div)
+      allComments.appendChild(li)
+    }
+
+    postcomment = function(event) {
+      var comment = commentInput.value
+      if (event.keyCode == 13 && comment != "") { // pressed Enter
+
+        var doc = {
+          "comment": comment,
+          "base_url": baseUrlInput.value
+        }
+
+        postCommentXHR.open("POST", "http://stalin.otokar.looc2011.eu:5984/commentaireuniversel", true);
+        postCommentXHR.setRequestHeader('Content-Type', 'application/json');
+        postCommentXHR.send(JSON.stringify(doc));
+
+        commentInput.value = ''
+      }
+    }
+
+    window.onload = function() {
+      baseUrlInput.value = window.location.href;
+      updateComments();
+    }
+  </script>
+
+</html>
