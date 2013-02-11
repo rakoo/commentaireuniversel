@@ -21,7 +21,15 @@
     </ul>
   </body>
 
+  <script src="http://otokar:8080/socket.io/socket.io.js"></script>
   <script>
+
+    var socket = io.connect('http://localhost');
+    socket.on('news', function (data) {
+      console.log(data);
+      socket.emit('my other event', { my: 'data' });
+    });
+
     var baseUrlInput = document.getElementById('base_url')
     var commentInput = document.getElementById('comment')
     var allComments = document.getElementById('past_comments')
