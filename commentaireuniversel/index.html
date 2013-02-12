@@ -21,21 +21,21 @@
     </ul>
   </body>
 
-  <script src="http://otokar:8080/socket.io/socket.io.js"></script>
+  <script src="http://localhost:8080/socket.io/socket.io.js"></script>
   <script>
-
-    var socket = io.connect('http://localhost');
-    socket.on('news', function (data) {
-      console.log(data);
-      socket.emit('my other event', { my: 'data' });
-    });
 
     var baseUrlInput = document.getElementById('base_url')
     var commentInput = document.getElementById('comment')
     var allComments = document.getElementById('past_comments')
 
+    var socket = io.connect('http://localhost:8080');
+    socket.emit('join_room', baseUrlInput.value);
+    socket.on('new_doc', function (data) {
+      updateComments();
+    });
 
     changeUrl = function(event) {
+      socket.emit('join_room', baseUrlInput.value);
       if (event.keyCode == 13) {
         updateComments();
       }
@@ -56,14 +56,11 @@
               appendCommentToCommentList(parsed['rows'][rowIndex]['value']);
             }
           }
-          else if (getCommentsXHR.status > 0) {
-            updateComments()
-          }
         }
       }
 
       getCommentsXHR.open("GET",
-        "http://stalin.otokar.looc2011.eu:5984/commentaireuniversel/_design/commentaireuniversel/_view/by_site?"
+        "http://localhost:5984/commentaireuniversel/_design/commentaireuniversel/_view/by_site?"
         + "reduce=false&"
         + "descending=true&"
         + "limit=10&"
@@ -78,7 +75,7 @@
     postCommentXHR.onreadystatechange = function() {
       if (postCommentXHR.readyState == 4) {
         if (postCommentXHR.status == 201) {
-          updateComments();
+          // Nothing to do here
         }
       }
     }
@@ -100,7 +97,7 @@
           "base_url": baseUrlInput.value
         }
 
-        postCommentXHR.open("POST", "http://stalin.otokar.looc2011.eu:5984/commentaireuniversel", true);
+        postCommentXHR.open("POST", "http://localhost:5984/commentaireuniversel", true);
         postCommentXHR.setRequestHeader('Content-Type', 'application/json');
         postCommentXHR.send(JSON.stringify(doc));
 
