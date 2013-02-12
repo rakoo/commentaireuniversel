@@ -1,9 +1,10 @@
-= REQUIREMENTS
+# REQUIREMENTS
+
 - nodejs
 - socket.io
 - couchdb
 
-= LAUNCH
+# LAUNCH
 
 - Launch the socket.io server :
   $ node notif-server server.js
