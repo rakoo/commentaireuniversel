@@ -1,0 +1,11 @@
+= REQUIREMENTS
+- nodejs
+- socket.io
+- couchdb
+
+= LAUNCH
+
+- Launch the socket.io server :
+  $ node notif-server server.js
+- Put the couchapp in your couchdb :
+  $ cd commentaireuniversel && erica push localhost:5984/commentaireuniversel
