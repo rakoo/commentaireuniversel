@@ -10,3 +10,8 @@
   $ node notif-server server.js
 - Put the couchapp in your couchdb :
   $ cd commentaireuniversel && erica push localhost:5984/commentaireuniversel
+
+# DEMO
+http://krakotztest.iriscouch.com/commentaireuniversel/_design/commentaireuniversel/_rewrite/?base_url=http://www.google.fr
+
+Note : comments may be deleted at any moment
