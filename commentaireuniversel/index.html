@@ -27,7 +27,7 @@
     </ul>
   </body>
 
-  <script src="http://localhost:8080/socket.io/socket.io.js"></script>
+  <script src="http://kpad.otokar.looc2011.eu:8080/socket.io/socket.io.js"></script>
   <script>
 
     getCouchdbStore = function() {
@@ -55,7 +55,7 @@
     var iframe = document.getElementById('iframe')
 
 
-    var socket = io.connect('http://localhost:8080');
+    var socket = io.connect('http://kpad.otokar.looc2011.eu:8080');
     socket.emit('join_room', qs['base_url']);
     socket.on('new_doc', function (data) {
       updateComments();
