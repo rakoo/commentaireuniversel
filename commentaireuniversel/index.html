@@ -91,7 +91,8 @@
         + "reduce=false&"
         + "descending=true&"
         + "limit=10&"
-        + "endkey=[\"" + encodeURIComponent(qs['base_url']) + "\"]",
+        + "endkey=[\"" + encodeURIComponent(qs['base_url']) + "\"]&"
+        + "startkey=[\"" + encodeURIComponent(qs['base_url']) + "\",\"\\u9999\"]",
         true
       )
       getCommentsXHR.setRequestHeader('Content-Type', 'application/json');
