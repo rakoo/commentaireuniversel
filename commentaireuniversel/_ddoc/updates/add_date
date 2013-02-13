@@ -1,0 +1,8 @@
+function (doc, req) {
+  if (!req.body) 
+    return [null, "No doc\n"];
+  var doc = JSON.parse(req.body);
+  doc['_id'] = req.uuid;
+  doc['date_added'] = new Date().toISOString();
+  return [doc, "Added date to doc : " + toJSON(doc)];
+}

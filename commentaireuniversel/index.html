@@ -91,7 +91,7 @@
         + "reduce=false&"
         + "descending=true&"
         + "limit=10&"
-        + "key=\"" + encodeURIComponent(qs['base_url']) + "\"",
+        + "endkey=[\"" + encodeURIComponent(qs['base_url']) + "\"]",
         true
       )
       getCommentsXHR.setRequestHeader('Content-Type', 'application/json');
@@ -141,7 +141,7 @@
         "base_url": qs['base_url']
       }
 
-      postCommentXHR.open("POST", couchdbStore, true);
+      postCommentXHR.open("POST", couchdbStore + '/_design/commentaireuniversel/_update/add_date', true);
       postCommentXHR.setRequestHeader('Content-Type', 'application/json');
       postCommentXHR.send(JSON.stringify(doc));
 
